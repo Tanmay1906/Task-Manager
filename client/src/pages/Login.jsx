@@ -3,20 +3,32 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Textbox from "../components/Textbox";
 import Button from "../components/Button";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setCredentials } from "../redux/slices/authSlice";
 
 const Login = () => {
   const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch(); // Initialize useDispatch
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm(
+    {
+      defaultValues: {
+        username: "defaultUsername", // Set default username
+        password: "defaultPassword"  // Set default password
+      }
+    }
+  );
 
   const navigate = useNavigate();
 
   const submitHandler = async (data) => {
-    console.log("submit");
+    console.log("submit", data);
+    dispatch(setCredentials(data)); // Dispatch setCredentials action with form data
+    navigate("/dashboard"); // Navigate to dashboard after login
   };
 
   useEffect(() => {
